@@ -12,19 +12,40 @@ public class TonyAbBot extends Robot
     private Long lastScanTick = null;
     private Long lastBearingTick = null;
     private Long decideAimTick = null;
+    private Long colourTick = null;
+    private Long moveTick = null;
     private boolean aimLeft = true;
-
     private boolean backOut = false;
 
     public void run() {
         turnGunRight(60);
         while (true) {
             System.out.println("Running!");
+            move();
             runScan();
+            colorify();
             decideBearing();
             decideAim();
-            ahead(200);
-            //back(100);
+        }
+    }
+
+    private Color getColour() {
+        Random r = new Random();
+        return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
+    }
+
+    private void colorify() {
+        if (this.colourTick == null || super.getTime() > this.colourTick + 2) {
+            setColors(getColour(), getColour(), getColour());
+            this.colourTick = super.getTime();
+        }
+    }
+
+    private void move() {
+        if (this.moveTick == null || super.getTime() > this.moveTick + 2) {
+            ahead(100 + 200 * Math.random());
+            System.out.println("Moving");
+            this.moveTick = super.getTime();
         }
     }
 
@@ -66,7 +87,7 @@ public class TonyAbBot extends Robot
                 }
                 backOut = false;
             } else {
-                double dirDelta = 45.0 * Math.random();
+                double dirDelta = 60.0 * Math.random();
                 if (Math.random() > 0.5) {
                     turnRight(dirDelta);
                 } else {
@@ -74,7 +95,6 @@ public class TonyAbBot extends Robot
                 }
             }
             this.lastBearingTick = super.getTime();
-
         }
     }
 
@@ -87,7 +107,7 @@ public class TonyAbBot extends Robot
     @Override
     public void onScannedRobot(ScannedRobotEvent e) {
         final double power =
-                Math.max(1, Math.random() * Rules.MAX_BULLET_POWER);
+                Math.max(2, Math.random() * Rules.MAX_BULLET_POWER);
         fire(power);
     }
 
