@@ -31,7 +31,7 @@ public class TonyAbBot extends Robot
 
     private Color getColour() {
         Random r = new Random();
-        return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
+        return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
     }
 
     private void colorify() {
