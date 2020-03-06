@@ -8,15 +8,18 @@ import robocode.*;
  * TonyAbBot - a robot by (your name here)
  */
 public class TonyAbBot extends Robot
-{
- // Scan every three seconds
+{    // Scan every three seconds
     private Long lastScanTick = null;
     private Long lastBearingTick = null;
+
+    private boolean backOut = false;
 
     public void run() {
         while (true) {
             System.out.println("Running!");
-            runPeriodicals();
+
+            runScan();
+            decideBearing();
 
             ahead(100);
             turnGunRight(360);
@@ -25,7 +28,7 @@ public class TonyAbBot extends Robot
         }
     }
 
-    private void runPeriodicals() {
+    private void runScan() {
         if (this.lastScanTick == null || super.getTime() > this.lastScanTick + 3) {
             super.scan();
             System.out.println("Scanning");
@@ -34,8 +37,15 @@ public class TonyAbBot extends Robot
     }
 
     private void decideBearing() {
-        if (this.lastBearingTick == null || super.getTime() > this.lastBearingTick + 5) {
 
+        if (this.lastBearingTick == null || super.getTime() > this.lastBearingTick + 5) {
+            double dirDelta = 45.0 * Math.random();
+            if (Math.random() > 0.5) {
+                turnRight(dirDelta);
+            } else {
+                turnLeft(dirDelta);
+            }
+            this.lastBearingTick = super.getTime();
         }
     }
 
