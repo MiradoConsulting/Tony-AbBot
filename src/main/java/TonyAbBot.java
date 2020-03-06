@@ -56,14 +56,32 @@ public class TonyAbBot extends Robot
 
         if (this.lastBearingTick == null || super.getTime() > this.lastBearingTick + 3) {
             System.out.println("Deciding new bearing");
-            double dirDelta = 45.0 * Math.random();
-            if (Math.random() > 0.5) {
-                turnRight(dirDelta);
+
+            if (backOut) {
+                double dirDelta = 80.0 + 40.0 * Math.random();
+                if (Math.random() > 0.5) {
+                    turnRight(dirDelta);
+                } else {
+                    turnLeft(dirDelta);
+                }
+                backOut = false;
             } else {
-                turnLeft(dirDelta);
+                double dirDelta = 45.0 * Math.random();
+                if (Math.random() > 0.5) {
+                    turnRight(dirDelta);
+                } else {
+                    turnLeft(dirDelta);
+                }
             }
             this.lastBearingTick = super.getTime();
+
         }
+    }
+
+    @Override
+    public void onHitWall(HitWallEvent event) {
+        super.onHitWall(event);
+        backOut = true;
     }
 
     @Override
@@ -72,4 +90,5 @@ public class TonyAbBot extends Robot
                 Math.max(1, Math.random() * Rules.MAX_BULLET_POWER);
         fire(power);
     }
+
 }
